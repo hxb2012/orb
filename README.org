@@ -1,0 +1,71 @@
+#+TITLE: 欧布
+
+* 安装
+
+可以从[[https://github.com/hxb2012/melpa/][我的美尔巴]]安装 ~orb~
+
+* 功能
+
+** 更新SQLite
+
+*** 手动更新
+
+运行 ~M-x orb-db-sync~ 更新已经保存的文件
+
+运行 ~M-x orb-db-refresh~ 更新正在编辑的buffer
+
+*** orb-db-autosync
+
+类似 ~org-roam-db-autosync-mode~ ，在Emacs里保存文件时，自动更新SQLite。
+
+用 ~M-x orb-db-autosync-mode~ 打开
+
+*** orb-db-filewatch (仅支持Linux)
+
+只要Emacs开着，保存文件就会自动更新SQLite，无论在Emacs里还是在Emacs外。
+
+用 ~M-x orb-db-filewatch-mode~ 打开
+
+*** orb-db-smartrefresh
+
+buffer内容没改动就不更新了
+
+用 ~M-x orb-db-smartrefresh-mode~ 打开
+
+** orb-agenda
+
+利用SQLite里的数据查询Org Agenda，以避免打开很多文件。
+
+用 ~M-x orb-agenda-mode~ 打开
+
+因为要转换成SQLite查询，没法支持任意 ~org-agenda-skip-function-global~ 和 ~org-agenda-skip-function~ ，如果设置了不支持的函数，将会用Org Agenda打开这个文件。也不支持把 ~org-tags-match-list-sublevels~ 设置为 ~nil~ 。 ~org-columns-summary-types~ 里不支持自定义 ~collector~
+
+** orb-id
+
+利用SQLite里的数据加速ID查询，并且为所有没有描述的id链接显示标题
+
+用 ~M-x orb-id-mode~ 打开
+
+请打开 ~orb-db-smartrefresh-mode~
+
+** orb-export
+
+类似 ~org-roam-export~ ，输出HTML时，有ID用ID
+
+用 ~M-x orb-export-mode~ 打开
+
+** orb-remu
+
+像Org-Roam那样查询SQLite里的反向链接，需要把 ~remu-sections~ 改成
+
+#+BEGIN_SRC emacs-lisp
+'((:name "Headline Backlink" :redisplay orb-remu-backlink-headline-section)
+  (:name "Backlink" :redisplay orb-remu-backlink-section)
+  (:name "TODO" :redisplay orb-remu-todo-section))
+#+END_SRC
+
+第一种类似Org-Roam，只能查一个标题的。
+
+第二种可以查任意位置的。
+
+第三种查询有链接到当前标题的所有任务
