@@ -1,0 +1,148 @@
+#+TITLE: 欧布
+#+PROPERTY: header-args:emacs-lisp :lexical yes :results silent
+
+* 安装
+
+可以从[[https://github.com/hxb2012/melpa/][我的美尔巴]]安装 ~orb~
+
+* 功能
+
+** 更新SQLite
+
+*** 手动更新
+
+运行 ~M-x orb-db-sync~ 更新已经保存的文件
+
+运行 ~M-x orb-db-refresh~ 更新正在编辑的buffer
+
+*** orb-db-autosync
+
+类似 ~org-roam-db-autosync-mode~ ，在Emacs里保存文件时，自动更新SQLite。
+
+用 ~M-x orb-db-autosync-mode~ 打开
+
+*** orb-db-filewatch (仅支持Linux)
+
+只要Emacs开着，保存文件就会自动更新SQLite，无论在Emacs里还是在Emacs外。
+
+用 ~M-x orb-db-filewatch-mode~ 打开
+
+*** orb-db-smartrefresh
+
+buffer内容没改动就不更新了
+
+用 ~M-x orb-db-smartrefresh-mode~ 打开
+
+** orb-agenda
+
+利用SQLite里的数据查询Org Agenda，以避免打开很多文件。
+
+用 ~M-x orb-agenda-mode~ 打开
+
+因为要转换成SQLite查询，没法支持任意 ~org-agenda-skip-function-global~ 和 ~org-agenda-skip-function~ ，如果设置了不支持的函数，将会用Org Agenda打开这个文件。也不支持把 ~org-tags-match-list-sublevels~ 设置为 ~nil~ 。 ~org-columns-summary-types~ 里不支持自定义 ~collector~
+
+** orb-id
+
+利用SQLite里的数据加速ID查询，并且为所有没有描述的id链接显示标题
+
+用 ~M-x orb-id-mode~ 打开
+
+请打开 ~orb-db-smartrefresh-mode~
+
+** orb-export
+
+类似 ~org-roam-export~ ，输出HTML时，有ID用ID
+
+用 ~M-x orb-export-mode~ 打开
+
+** orb-sidebar
+:PROPERTIES:
+:ID:       orb-sidebar
+:END:
+
+~M-x orb-sidebar~ 打开侧栏，类似 ~org-roam-buffer-toggle~
+
+*** 演示
+
+**** 链接目标
+
+***** fuzzy headline only
+
+fuzzy headline only not found, <<fuzzy target>>, fuzzy text and <<<Radio Target>>>
+
+#+NAME: fuzzy name
+| a | b | c |
+
+***** id headline
+:PROPERTIES:
+:ID:       3d35cd9e-f443-49d2-b2f3-c0aca2174d5e
+:END:
+
+***** custom-id headline
+:PROPERTIES:
+:CUSTOM_ID: custom-id
+:END:
+
+#+BEGIN_SRC emacs-lisp
+(message "Hello, world!") (ref:coderef)
+#+END_SRC
+
+***** example.com (1)
+:PROPERTIES:
+:ORB_REFS: https://example.com/
+:END:
+
+***** example.com (2)
+:PROPERTIES:
+:ORB_REFS: https://example.com/
+:END:
+
+**** 链接
+
+[[*fuzzy headline only]], [[fuzzy target]], [[fuzzy text]], [[fuzzy name]], [[#custom-id]], Radio Target, [[(coderef)]]
+
+[[*fuzzy headline only not found]], [[fuzzy not found]], [[#custom-id-not-found]], [[(coderef-not-found)]]
+
+[[file:::1]], [[file:::*fuzzy headline only]], [[file:::fuzzy target]], [[file:::fuzzy text]], [[file:::#custom-id]], [[file:::/fuzzy/]]
+
+id:orb-sidebar
+
+显示所有 ~ORB_REFS~ 为 https://example.com/ 的标题，类似ROAM_REFS
+
+***** TODO task 1                                                       :tag:
+SCHEDULED: <2024-01-01 一>
+
+[[*fuzzy headline only]]
+
+[[*fuzzy headline only]]
+
+***** DONE task 2
+CLOSED: <2023-01-01 日>
+
+[[fuzzy headline]]
+
+***** TODO task 3
+
+[[id:3d35cd9e-f443-49d2-b2f3-c0aca2174d5e]]
+
+***** TODO task 4
+
+[[#custom-id]]
+
+***** TODO task 5
+
+https://example.com/
+
+***** TODO task 6
+DEADLINE: <2024-01-01 一>
+
+[[file:::/fuzzy/]]
+
+** orb-noter
+
+org-noter缩水版，改成从SQLite中查询笔记所在位置，而不是一个一个文件找
+
+| M-i | 新建笔记   |
+| M-. | 当前笔记   |
+| M-p | 上一条笔记 |
+| M-n | 下一条笔记 |

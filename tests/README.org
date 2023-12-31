@@ -1,0 +1,4 @@
+打开 ~orb-test.el~ 输入 ~M-x orb-test-run-all-tests~ 来执行测试
+
+不知道为什么，修改代码之后需要用 ~C-u C-c C-b~ 来更新，而不能用 ~M-x
+eval-buffer~ ，不然测试会通不过。
